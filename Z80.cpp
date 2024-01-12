@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(int argc, char *argv[])
+class CPU{
+};
+
+int main()
 {
     return 0;
 }
