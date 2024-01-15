@@ -14,7 +14,7 @@ class Memory{
     using Word = uint16_t;
     static constexpr int MEM_SIZE = 2048;
 
-    // 4 HM6116P-3 2048 x 8-bit static RAM chips
+    
     std::array<Memory::Byte, Memory::MEM_SIZE> Memory::SystemROM{};
     std::array<Memory::Byte, Memory::MEM_SIZE> Memory::SynclairSys{};
     std::array<Memory::Byte, Memory::MEM_SIZE> Memory::UserRAM1{};
@@ -22,9 +22,29 @@ class Memory{
 
     std::array<bool, 2> memorySelect = {false, false}; // A13 and A14
 
-    void selectBlock(bool A13, bool A14){
-        memorySelect[0] = A13;
-        memorySelect[1] = A14;
+    void selectBlock(int block){
+        switch (block){
+            case 0:
+                memorySelect[0] = false;
+                memorySelect[1] = false;
+                break;
+            case 1:
+                memorySelect[0] = true;
+                memorySelect[1] = false;
+                break;
+            case 2:
+                memorySelect[0] = false;
+                memorySelect[1] = true;
+                break;
+            case 3:
+                memorySelect[0] = true;
+                memorySelect[1] = true;
+                break;
+            default:
+                memorySelect[0] = false;
+                memorySelect[1] = false;
+                break;
+        }
     }
 
     void reset(){

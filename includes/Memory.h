@@ -15,9 +15,12 @@ class Memory {
         static std::array<Byte, MEM_SIZE> UserRAM1;    // Block 2, A13 = 0; A14 = 1
         static std::array<Byte, MEM_SIZE> UserRAM2;    // Block 3, A13 = 1; A14 = 1
 
+        static std::array<bool, 2> memorySelect; // A13 and A14
+
         Memory();
-        void selectBlock(bool A13, bool A14);
-        void reset();
+        ~Memory();
+        void selectBlock(int block);
+        void reset() const;
 };
 
 #endif // MEMORY_H
