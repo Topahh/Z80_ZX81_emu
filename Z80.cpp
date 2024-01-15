@@ -1,6 +1,43 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstdint>
+#include <array>
+
+#include "Memory.h"
+
+class Memory{
+    // Z80 does not have an internal Memory
+    // Using the Hunter 8k nonvolatile memory map from the ZX81 Technical Reference Manual
+
+    public:
+    using Byte = uint8_t;
+    using Word = uint16_t;
+    static constexpr int MEM_SIZE = 2048;
+
+    // 4 HM6116P-3 2048 x 8-bit static RAM chips
+    std::array<Memory::Byte, Memory::MEM_SIZE> Memory::SystemROM{};
+    std::array<Memory::Byte, Memory::MEM_SIZE> Memory::SynclairSys{};
+    std::array<Memory::Byte, Memory::MEM_SIZE> Memory::UserRAM1{};
+    std::array<Memory::Byte, Memory::MEM_SIZE> Memory::UserRAM2{};
+
+    std::array<bool, 2> memorySelect = {false, false}; // A13 and A14
+
+    void selectBlock(bool A13, bool A14){
+        memorySelect[0] = A13;
+        memorySelect[1] = A14;
+    }
+
+    void reset(){
+        for (int i = 0; i < MEM_SIZE; i++){
+            SystemROM[i] = 0x00;
+            SynclairSys[i] = 0x00;
+            UserRAM1[i] = 0x00;
+            UserRAM2[i] = 0x00;
+        }
+    }
+
+};
+
 
 class CPU{
 
@@ -28,9 +65,26 @@ class CPU{
     Word IX; // Index register
     Word IY; // Index register
     Word PC; // Program counter
+
+    public:
+    void start( Memory& memory ){
+        AF = DE = HL = 0x0000;
+        BC = 0x7FFF; // RAM starting address, ZX81 specific
+        AF_ = BC_ = DE_ = HL_ = 0x0000;
+        IX = IY = 0x0000;
+        PC = 0x0000;
+        SP = 0xFFFF;
+        I = R = 0x00;
+        memory.reset();
+    }
+
+
 };
 
 int main()
 {
+    CPU cpu;
+    Memory hunter;
+    cpu.start( hunter );
     return 0;
 }
