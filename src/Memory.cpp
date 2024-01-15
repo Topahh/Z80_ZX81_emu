@@ -1,16 +1,13 @@
-// Z80 does not have an internal Memory
-// Using the Hunter 8k nonvolatile memory map from the ZX81 Technical Reference Manual
+
 #include <array>
 #include "../includes/Memory.h"
 
+std::array<Memory::Byte, Memory::MEM_SIZE> Memory::SystemROM{};
+std::array<Memory::Byte, Memory::MEM_SIZE> Memory::SynclairSys{};
+std::array<Memory::Byte, Memory::MEM_SIZE> Memory::UserRAM1{};
+std::array<Memory::Byte, Memory::MEM_SIZE> Memory::UserRAM2{};
 
-// Hunter have 4 HM6116P-3 : 2048 x 8-bit static RAM chips
-std::array<Memory::Byte, Memory::MEM_SIZE> Memory::SystemROM{};     // Block 0
-std::array<Memory::Byte, Memory::MEM_SIZE> Memory::SynclairSys{};   // Block 1
-std::array<Memory::Byte, Memory::MEM_SIZE> Memory::UserRAM1{};      // Block 2
-std::array<Memory::Byte, Memory::MEM_SIZE> Memory::UserRAM2{};      // Block 3
 
-// Block selection is done by A13 and A14
 std::array<bool, 2> Memory::memorySelect = {false, false}; // A13 and A14
 
 // Constructor
@@ -19,8 +16,10 @@ Memory::Memory(){reset();}
 Memory::~Memory(){reset();}
 
 // region[rgba(80, 200, 150, 0.05)]
+
 // Methods
-void Memory::selectBlock(int block){
+// Select the memory block to use
+void Memory::selectBlock(int block) const{
     switch (block){
         case 0:
             memorySelect[0] = false;
@@ -45,6 +44,7 @@ void Memory::selectBlock(int block){
     }
 }
 
+// Reset the memory
 void Memory::reset() const{
     for (int i = 0; i < MEM_SIZE; i++){
         SystemROM[i] = 0x00;
