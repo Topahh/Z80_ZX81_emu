@@ -18,13 +18,8 @@ Memory::~Memory(){reset();}
 // region[rgba(80, 200, 150, 0.05)]
 
 // Methods
-// Select the memory block to use
-void Memory::selectBlock(int block) const{
+void Memory::selectBlock(unsigned short block) const{
     switch (block){
-        case 0:
-            memorySelect[0] = false;
-            memorySelect[1] = false;
-            break;
         case 1:
             memorySelect[0] = true;
             memorySelect[1] = false;

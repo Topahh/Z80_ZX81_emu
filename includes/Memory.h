@@ -23,7 +23,7 @@ class Memory {
 
         Memory();
         ~Memory();
-        void selectBlock(int block) const;
+        void selectBlock(unsigned short block) const;
         void reset() const;
 };
 
